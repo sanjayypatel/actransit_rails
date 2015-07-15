@@ -1,0 +1,1 @@
+require 'actransit_rails'

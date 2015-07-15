@@ -1,13 +1,15 @@
 require "actransit_rails/version"
+require 'json'
 
-class ActransitRails
+module ACTransitRails
 
+  attr_writer :actransit_token
 
-  def initialize(actransit_token)
+  def self.configure(actransit_token)
     @actransit_token = actransit_token
   end
 
- def self.get_all_routes
+  def self.get_all_routes
     uri = URI.parse(
       base_url + 
       "routes/" + 
@@ -65,19 +67,19 @@ class ActransitRails
 
   private
 
-  def base_url
+  def self.base_url
     return "http://api.actransit.org/transit/"
   end
 
-  def search_string
+  def self.search_string
     "?"
   end
 
-  def my_token
-    return "token=" + ENV["ACTRANSIT_TOKEN"]
+  def self.my_token
+    return "token=" + @actransit_token
   end
 
-  def get_response(uri)
+  def self.get_response(uri)
     http = Net::HTTP.new(uri.host, uri.port)
     response = http.request(Net::HTTP::Get.new(uri.request_uri))
     return JSON.parse response.body

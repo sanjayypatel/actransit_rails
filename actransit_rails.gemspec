@@ -5,7 +5,7 @@ require 'actransit_rails/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "actransit_rails"
-  spec.version       = ActransitRails::VERSION
+  spec.version       = ACTransitRails::VERSION
   spec.authors       = ["Sanjay Y Patel"]
   spec.email         = ["sanjay.y.patel@gmail.com"]
 
@@ -27,6 +27,9 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
+  spec.add_dependency 'json'
+
   spec.add_development_dependency "bundler", "~> 1.10"
   spec.add_development_dependency "rake", "~> 10.0"
+  spec.add_development_dependency 'rspec'
 end
