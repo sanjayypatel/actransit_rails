@@ -4,6 +4,8 @@ A gem for accessing the ACTransit API in Rails.
 
 Checkout the ACTransit [Documentation](http://api.actransit.org/transit/) for more info.
 
+[Change Log](/CHANGELOG.md) details of each new version.
+
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -22,6 +24,8 @@ Or install it yourself as:
 
 ## Usage
 
+### Setup
+
 1. Make sure you [register an application](http://api.actransit.org/transit/Account/Register) with ACTransit to get your access token.
 
 2. I'd recommend using a gem like [figaro](https://github.com/laserlemon/figaro) to safely store your ACTransit access token as an environment variable.
@@ -36,7 +40,9 @@ ACTransitRails.configure(ENV['ACTRANSIT_TOKEN'])
 ACTransitRails.configure("myactransittoken")
 ```
 
-4. Once configured, you can use the helper methods to make requests from the api.  Responses will be formatted as either a hash or an array of hashes depending on what you request.
+### Making Requests
+
+*  Once configured, you can use the helper methods to make requests from the api.  Responses will be formatted as either a hash or an array of hashes depending on what you request.
 
 ```ruby
 # returns array of hashes
@@ -63,6 +69,17 @@ ACTransitRails.get_stops('E', 4119214)
 
 ```
 
+### Errors
+
+* ACTransitRails will raise an APIAccessError with a `message` and `code` attributes.
+* You can `rescue_from` error messages by adding a callback in your ApplicationController like this:
+
+```ruby
+rescue_from ACTransitRails::APIAccessError do |exception|
+  flash[:alert] = exception.message
+  redirect_to(request.referrer || root_path)
+end
+```
 
 ## Contributing
 
