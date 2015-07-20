@@ -1,4 +1,5 @@
 require "actransit_rails/version"
+require "actransit_rails/exceptions"
 require 'json'
 
 module ACTransitRails
@@ -60,7 +61,8 @@ module ACTransitRails
       "#{route_name}/trip/" + 
       "#{trip}/stops/" + 
       search_string + 
-      my_token
+      my_token +
+      response_format
     )
     return get_response(uri)
   end
@@ -79,9 +81,28 @@ module ACTransitRails
     return "token=" + @actransit_token
   end
 
+  def self.response_format
+    return "&format=json"
+  end
+
   def self.get_response(uri)
     http = Net::HTTP.new(uri.host, uri.port)
-    response = http.request(Net::HTTP::Get.new(uri.request_uri))
-    return JSON.parse response.body
+    http_response = http.request(Net::HTTP::Get.new(uri.request_uri))
+    return process_response(http_response)
   end
+
+  def self.process_response(http_response)
+    code = "#{http_response.code}"
+    message = ""
+    case (http_response.code)
+    when '200'
+      return JSON.parse http_response.body
+    when '401'
+      message = http_response.body
+    when '404'
+      message = "Not found. No results for your query."
+    end
+    raise ACTransitRails::APIAccessError.new(message, code)
+  end
+
 end

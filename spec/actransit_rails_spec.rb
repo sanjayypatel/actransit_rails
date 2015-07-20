@@ -120,6 +120,24 @@ describe ACTransitRails do
         end
       end
     end# describe .get_stops
-
   end # context get_ helper methods
+
+  context 'raising errors' do
+
+    describe 'invalid token' do
+      it 'should raise an APIAccessError' do
+        ACTransitRails.configure("invalidtoken")
+        expect{ACTransitRails.get_all_routes}.to raise_error(ACTransitRails::APIAccessError)
+      end
+    end # describe invalid token
+
+    describe 'invalid route' do
+      it 'it should raise an APIAccessError' do
+        ACTransitRails.configure(Secrets.ACTRANSIT_TOKEN)
+        expect{ACTransitRails.get_route('invalid')}.to raise_error(ACTransitRails::APIAccessError)
+      end
+    end
+
+  end # context raising errors
+
 end # describe ActransitRails
