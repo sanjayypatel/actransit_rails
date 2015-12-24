@@ -53,16 +53,37 @@ module ACTransitRails
     return get_response(uri)
   end
 
-  def self.get_stops(route_name, trip = nil)
-    trip ||= get_trips(route_name)[0]["TripId"]
+  def self.get_stops(route_name, trip_id = nil)
+    trip_id ||= get_trips(route_name)[0]["TripId"]
     uri = URI.parse(
       base_url + 
       "route/" + 
       "#{route_name}/trip/" + 
-      "#{trip}/stops/" + 
+      "#{trip_id}/stops/" + 
       search_string + 
       my_token +
       response_format
+    )
+    return get_response(uri)
+  end
+# new functions 0.3.0
+  def self.get_all_stops
+    uri = URI.parse(
+      base_url + 
+      "stops/" + 
+      search_string + 
+      my_token
+    )
+    return get_response(uri)
+  end
+
+  def self.get_vehicle_predictions(stop_id)
+    uri = URI.parse(
+      base_url + 
+      "stops/" + 
+      "#{stop_id}/predictions/" +
+      search_string + 
+      my_token
     )
     return get_response(uri)
   end
