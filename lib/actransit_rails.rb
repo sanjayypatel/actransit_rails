@@ -10,12 +10,15 @@ module ACTransitRails
     @actransit_token = actransit_token
   end
 
+  # ROUTES
+
   def self.get_all_routes
     uri = URI.parse(
       base_url + 
-      "routes/" + 
+      "routes" + 
       search_string + 
-      my_token
+      my_token +
+      response_format
     )
     return get_response(uri)
   end
@@ -24,9 +27,10 @@ module ACTransitRails
     uri = URI.parse(
       base_url + 
       "route/" + 
-      "#{route_name}/" + 
+      "#{route_name}" + 
       search_string + 
-      my_token
+      my_token +
+      response_format
     )
     return get_response(uri)
   end
@@ -35,9 +39,10 @@ module ACTransitRails
     uri = URI.parse(
       base_url + 
       "route/" + 
-      "#{route_name}/trips/" + 
+      "#{route_name}/trips" + 
       search_string + 
-      my_token
+      my_token +
+      response_format
     )
     return get_response(uri)
   end
@@ -46,9 +51,10 @@ module ACTransitRails
     uri = URI.parse(
       base_url + 
       "route/" + 
-      "#{route_name}/directions/" + 
+      "#{route_name}/directions" + 
       search_string + 
-      my_token
+      my_token +
+      response_format
     )
     return get_response(uri)
   end
@@ -59,20 +65,37 @@ module ACTransitRails
       base_url + 
       "route/" + 
       "#{route_name}/trip/" + 
-      "#{trip_id}/stops/" + 
+      "#{trip_id}/stops" + 
       search_string + 
       my_token +
       response_format
     )
     return get_response(uri)
   end
-# new functions 0.3.0
+
+  def self.get_route_pattern(route_name, trip_id = nil)
+    trip_id ||= get_trips(route_name)[0]["TripId"]
+    uri = URI.parse(
+      base_url + 
+      "route/" + 
+      "#{route_name}/trip/" + 
+      "#{trip_id}/pattern" + 
+      search_string + 
+      my_token +
+      response_format
+    )
+    return get_response(uri)
+  end
+
+  # STOPS
+
   def self.get_all_stops
     uri = URI.parse(
       base_url + 
-      "stops/" + 
+      "stops" + 
       search_string + 
-      my_token
+      my_token +
+      response_format
     )
     return get_response(uri)
   end
@@ -81,9 +104,50 @@ module ACTransitRails
     uri = URI.parse(
       base_url + 
       "stops/" + 
-      "#{stop_id}/predictions/" +
+      "#{stop_id}/predictions" +
       search_string + 
-      my_token
+      my_token +
+      response_format
+    )
+    return get_response(uri)
+  end
+
+  # VEHICLES
+
+  def self.get_vehicle(vehicle_id)
+    uri = URI.parse(
+      base_url +
+      "vehicle/" +
+      "#{vehicle_id}" +
+      search_string +
+      my_token +
+      response_format
+    )
+    return get_response(uri)
+  end
+
+  # GTFS
+
+  def self.get_gtfs_info
+    uri = URI.parse(
+      base_url +
+      "gtfs" +
+      search_string +
+      my_token +
+      response_format
+    )
+    return get_response(uri)
+  end
+
+  # SERVICE NOTICES
+
+  def self.get_service_notices
+    uri = URI.parse(
+      base_url +
+      "servicenotices" +
+      search_string +
+      my_token +
+      response_format
     )
     return get_response(uri)
   end
@@ -122,6 +186,8 @@ module ACTransitRails
       message = http_response.body
     when '404'
       message = "Not found. No results for your query."
+    else
+      message = http_response.body
     end
     raise ACTransitRails::APIAccessError.new(message, code)
   end
