@@ -177,32 +177,7 @@ describe ACTransitRails do
           expect(response_hash).to have_key("ScheduledTime")
         end
       end
-    end # describe .get_vehicle_predictions
-
-    describe '.get_vehicle_predictions' do
-      before do
-        @response = ACTransitRails.get_vehicle_predictions(58123)
-      end
-
-      it 'returns an array of hashes' do
-        expect(@response.class).to eq(Array)
-        @response.each do |response_hash|
-          expect(response_hash.class).to eq(Hash)
-        end
-      end
-
-      it 'should provide hashes with proper keys' do
-        @response.each do |response_hash|
-          expect(response_hash).to have_key("StopId")
-          expect(response_hash).to have_key("TripId")
-          expect(response_hash).to have_key("VehicleId")
-          expect(response_hash).to have_key("RouteName")
-          expect(response_hash).to have_key("PredictedDelayInSeconds")
-          expect(response_hash).to have_key("PredictedDeparture")
-          expect(response_hash).to have_key("PredictionDateTime")
-        end
-      end
-    end # describe .get_vehicle_predictions
+    end # describe .get_all_stops
 
     describe '.get_vehicle' do
       before do

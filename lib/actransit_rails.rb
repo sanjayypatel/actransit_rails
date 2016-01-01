@@ -100,18 +100,6 @@ module ACTransitRails
     return get_response(uri)
   end
 
-  def self.get_vehicle_predictions(stop_id)
-    uri = URI.parse(
-      base_url + 
-      "stops/" + 
-      "#{stop_id}/predictions" +
-      search_string + 
-      my_token +
-      response_format
-    )
-    return get_response(uri)
-  end
-
   # VEHICLES
 
   def self.get_vehicle(vehicle_id)
