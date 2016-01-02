@@ -13,35 +13,27 @@ describe ACTransitRails do
         @response = ACTransitRails.get_all_routes
       end
 
-      it 'returns an array of hashes' do
+      it 'returns an array of ACTransitRails::Route objects' do
         expect(@response.class).to eq(Array)
-        @response.each do |response_hash|
-          expect(response_hash.class).to eq(Hash)
-        end
-      end
-
-      it 'should provide hashes with proper keys' do
-        @response.each do |response_hash|
-          expect(response_hash).to have_key("RouteId")
-          expect(response_hash).to have_key("Name")
-          expect(response_hash).to have_key("Description")
+        @response.each do |route|
+          expect(route.class).to eq(ACTransitRails::Route)
         end
       end
     end # describe .get_all_routes
 
     describe '.get_route' do
       before do
-        @response = ACTransitRails.get_route('E')
+        @response = ACTransitRails.get_route('1')
       end
 
-      it 'returns a hash' do
-        expect(@response.class).to eq(Hash)
+      it 'returns a ACTransitRails::Route object' do
+        expect(@response.class).to eq(ACTransitRails::Route)
       end
 
-      it 'should provide a hash with proper keys' do
-        expect(@response).to have_key("RouteId")
-        expect(@response).to have_key("Name")
-        expect(@response).to have_key("Description")
+      it 'should return an object with the proper attributes' do
+        expect(@response).to respond_to(:id)
+        expect(@response).to respond_to(:name)
+        expect(@response).to respond_to(:description)
       end
     end # describe .get_route
 
@@ -50,20 +42,10 @@ describe ACTransitRails do
         @response = ACTransitRails.get_trips('E')
       end
 
-      it 'returns an array of hashes' do
+      it 'returns an array of ACTransitRails::Trip objects' do
         expect(@response.class).to eq(Array)
-        @response.each do |response_hash|
-          expect(response_hash.class). to eq(Hash)
-        end
-      end
-
-      it 'should provide hashes with proper keys' do
-        @response.each do |response_hash|
-          expect(response_hash).to have_key("TripId")
-          expect(response_hash).to have_key("RouteName")
-          expect(response_hash).to have_key("ScheduleType")
-          expect(response_hash).to have_key("StartTime")
-          expect(response_hash).to have_key("Direction")
+        @response.each do |trip|
+          expect(trip.class). to eq(ACTransitRails::Trip)
         end
       end
     end # describe .get_trips
@@ -92,31 +74,14 @@ describe ACTransitRails do
         @response_with_trip = ACTransitRails.get_stops('B', 4292041)
       end
 
-      it 'returns an array of hashes' do
+      it 'returns an array of ACTransitRails::Stop objects' do
         expect(@response_without_trip.class).to eq(Array)
         expect(@response_with_trip.class).to eq(Array)
-        @response_without_trip.each do |response_hash|
-          expect(response_hash.class).to eq(Hash)
+        @response_without_trip.each do |stop|
+          expect(stop.class).to eq(ACTransitRails::Stop)
         end
-        @response_with_trip.each do |response_hash|
-          expect(response_hash.class).to eq(Hash)
-        end
-      end
-
-      it 'should provide hashes with proper keys' do
-        @response_without_trip.each do |response_hash|
-          expect(response_hash).to have_key("StopId")
-          expect(response_hash).to have_key("Name")
-          expect(response_hash).to have_key("Latitude")
-          expect(response_hash).to have_key("Longitude")
-          expect(response_hash).to have_key("ScheduledTime")
-        end
-        @response_with_trip.each do |response_hash|
-          expect(response_hash).to have_key("StopId")
-          expect(response_hash).to have_key("Name")
-          expect(response_hash).to have_key("Latitude")
-          expect(response_hash).to have_key("Longitude")
-          expect(response_hash).to have_key("ScheduledTime")
+        @response_with_trip.each do |stop|
+          expect(stop.class).to eq(ACTransitRails::Stop)
         end
       end
     end# describe .get_stops
@@ -184,17 +149,8 @@ describe ACTransitRails do
         @response = ACTransitRails.get_vehicle(2202)
       end
 
-      it 'returns a hash' do
-        expect(@response.class).to eq(Hash)
-      end
-
-      it 'should provide a hash with proper keys' do
-        expect(@response).to have_key("VehicleId")
-        expect(@response).to have_key("CurrentTripId")
-        expect(@response).to have_key("Latitude")
-        expect(@response).to have_key("Longitude")
-        expect(@response).to have_key("Heading")
-        expect(@response).to have_key("TimeLastReported")
+      it 'returns a ACTransitRails::Vehicle object' do
+        expect(@response.class).to eq(ACTransitRails::Vehicle)
       end
     end # describe .get_vehicle
 

@@ -1,5 +1,9 @@
 require "actransit_rails/version"
 require "actransit_rails/exceptions"
+require "actransit_rails/route"
+require "actransit_rails/trip"
+require "actransit_rails/stop"
+require "actransit_rails/vehicle"
 require 'json'
 
 module ACTransitRails
@@ -20,7 +24,12 @@ module ACTransitRails
       my_token +
       response_format
     )
-    return get_response(uri)
+    response = get_response(uri)
+    routes = []
+    response.each do |hash|
+      routes << Route.new_from_api_response(hash)
+    end
+    return routes
   end
 
   def self.get_route(route_name)
@@ -32,7 +41,8 @@ module ACTransitRails
       my_token +
       response_format
     )
-    return get_response(uri)
+    response = get_response(uri)
+    return Route.new_from_api_response(response)
   end
 
   def self.get_trips(route_name)
@@ -44,7 +54,12 @@ module ACTransitRails
       my_token +
       response_format
     )
-    return get_response(uri)
+    response = get_response(uri)
+    trips = []
+    response.each do |hash|
+      trips << Trip.new_from_api_response(hash)
+    end
+    return trips
   end
 
   def self.get_directions(route_name)
@@ -60,7 +75,7 @@ module ACTransitRails
   end
 
   def self.get_stops(route_name, trip_id = nil)
-    trip_id ||= get_trips(route_name)[0]["TripId"]
+    trip_id ||= get_trips(route_name)[0].id
     uri = URI.parse(
       base_url + 
       "route/" + 
@@ -70,11 +85,16 @@ module ACTransitRails
       my_token +
       response_format
     )
-    return get_response(uri)
+    response =  get_response(uri)
+    stops = []
+    response.each do |hash|
+      stops << Stop.new_from_api_response(hash)
+    end
+    return stops
   end
 
   def self.get_route_pattern(route_name, trip_id = nil)
-    trip_id ||= get_trips(route_name)[0]["TripId"]
+    trip_id ||= get_trips(route_name)[0].id
     uri = URI.parse(
       base_url + 
       "route/" + 
@@ -111,7 +131,8 @@ module ACTransitRails
       my_token +
       response_format
     )
-    return get_response(uri)
+    response = get_response(uri)
+    return Vehicle.new_from_api_response(response)
   end
 
   # GTFS
